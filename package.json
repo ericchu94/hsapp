@@ -17,8 +17,13 @@
   },
   "homepage": "https://github.com/ericchu94/hsapp#readme",
   "dependencies": {
+    "child-process-promise": "^2.0.3",
+    "fs-extra-promise": "^0.4.0",
     "koa": "^2.0.0",
     "koa-multer": "^1.0.0",
-    "koa-route": "^3.1.0"
+    "koa-route": "^3.1.0",
+    "koa-sendfile": "^2.0.0",
+    "nodegit": "^0.13.2",
+    "request-promise": "^3.0.0"
   }
 }
