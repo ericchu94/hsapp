@@ -1,19 +1,19 @@
 {
-  "name": "hs",
+  "name": "hsapp",
   "version": "1.0.0",
   "description": "Inject FBI into hs.app",
-  "main": "hs.js",
+  "main": "hsapp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericchu94/hs.git"
+    "url": "git+https://github.com/ericchu94/hsapp.git"
   },
   "author": "Eric Chu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ericchu94/hs/issues"
+    "url": "https://github.com/ericchu94/hsapp/issues"
   },
-  "homepage": "https://github.com/ericchu94/hs#readme"
+  "homepage": "https://github.com/ericchu94/hsapp#readme"
 }
