@@ -1,0 +1,19 @@
+{
+  "name": "hs",
+  "version": "1.0.0",
+  "description": "Inject FBI into hs.app",
+  "main": "hs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericchu94/hs.git"
+  },
+  "author": "Eric Chu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericchu94/hs/issues"
+  },
+  "homepage": "https://github.com/ericchu94/hs#readme"
+}
