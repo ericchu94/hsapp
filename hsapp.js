@@ -9,9 +9,10 @@ const fs = require('fs-extra-promise');
 const rp = require('request-promise');
 const request = require('request');
 const execFile = require('child-process-promise').execFile;
-const sendfile = require('koa-sendfile');
+const send = require('koa-send');
 
 const FBI = 'FBI.cia';
+const FBI_INJECT = 'FBI_inject_with_banner.app';
 const FBI_LATEST = 'https://api.github.com/repos/Steveice10/FBI/releases/latest';
 const UNIVERSAL_INJECT_GENERATOR_GIT = 'https://github.com/d0k3/Universal-Inject-Generator.git';
 const UNIVERSAL_INJECT_GENERATOR_STABLE = 'a9109b3dd48ecb37838976726afdb25ad6fd2d45';
@@ -36,7 +37,9 @@ app.use(route.post('/inject', (ctx) => {
       cwd: wd,
     });
   }).then(() => {
-    return sendfile(ctx, `${wd}/FBI_inject_with_banner.app`);
+    return send(ctx, `${wd}/${FBI_INJECT}`, {
+      root: '/',
+    });
   }).then(() => {
     return fs.removeAsync(wd);
   }).then(() => {
@@ -53,7 +56,7 @@ rp({
 }).then(data => {
   data = JSON.parse(data);
   for (const asset of data.assets) {
-    if (asset.name == 'FBI.cia') {
+    if (asset.name == FBI) {
       return new Promise((resolve, reject) => {
         request(asset.browser_download_url)
           .on('error', reject)
