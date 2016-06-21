@@ -10,6 +10,7 @@ const rp = require('request-promise');
 const request = require('request');
 const execFile = require('child-process-promise').execFile;
 const send = require('koa-send');
+const serve = require('koa-static');
 
 const FBI = 'FBI.cia';
 const FBI_INJECT = 'FBI_inject_with_banner.app';
@@ -23,6 +24,8 @@ const upload = multer({
   dest: os.tmpdir(),
 });
 
+app.use(route.get('/', serve('assets')));
+app.use(route.get('/assets/*', serve('.')));
 app.use(route.post('/inject', upload.single('hsapp')));
 app.use(route.post('/inject', (ctx) => {
   const hsapp = ctx.req.file.path;
