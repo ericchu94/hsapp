@@ -12,8 +12,12 @@
         Drag or Browse For hs.app
       </button>
     </div>
-    <input type="file" name="hsapp"/>
+    <form method="post" action="/inject" enctype="multipart/form-data">
+      <input type="file" name="hsapp"/>
+    </form>
     <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+    <script src="assets/FileSaver.min.js"></script>
+    <script src="assets/jquery.binarytransport.js"></script>
     <script src="assets/index.js"></script>
   </body>
 </html>

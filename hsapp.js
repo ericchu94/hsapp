@@ -40,6 +40,7 @@ app.use(route.post('/inject', (ctx) => {
       cwd: wd,
     });
   }).then(() => {
+    ctx.set('Content-Disposition', `attachment; filename="${FBI_INJECT}"`);
     return send(ctx, `${wd}/${FBI_INJECT}`, {
       root: '/',
     });
