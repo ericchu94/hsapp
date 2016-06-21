@@ -32,4 +32,9 @@ $(function () {
   $('#caption').on('dragleave', function (event) {
     $('#caption').removeClass('highlight');
   });
+  $.get('/info').then(function (data) {
+    for (var key in data) {
+      $('#info').append('<span>' + key + ': ' + data[key] + '</span> ');
+    }
+  });
 });

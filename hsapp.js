@@ -24,11 +24,22 @@ const upload = multer({
   dest: os.tmpdir(),
 });
 
+app.context.info = {};
+
+app.use((ctx, next) => {
+  const start = new Date();
+  return next().then(() => {
+    const end = new Date();
+    console.log(`${ctx.method} ${ctx.url} - ${end - start} ms`);
+  });
+});
 app.use(route.get('/', serve('assets')));
 app.use(route.get('/assets/*', serve('.')));
 app.use(route.post('/inject', upload.single('hsapp')));
 app.use(route.post('/inject', (ctx) => {
   const hsapp = ctx.req.file.path;
+  const size = ctx.req.file.size;
+  console.log(`Size: ${size / 1000} kB`);
   const wd = `${hsapp}_hsapp`
   return fs.copyAsync(UNIVERSAL_INJECT_GENERATOR, wd).then(() => {
     return Promise.all([
@@ -47,32 +58,47 @@ app.use(route.post('/inject', (ctx) => {
   }).then(() => {
     return fs.removeAsync(wd);
   }).then(() => {
-    console.log('Success');
+    console.log('hs.app successfully injected');
   });
 }));
+app.use(route.get('/info', ctx => {
+  ctx.body = app.context.info;
+}));
 
-rp({
-  url: FBI_LATEST,
-  headers: {
-    'User-Agent': 'ericchu94/hsapp',
-    'Accept': 'application/vnd.github.v3+json',
-  },
-}).then(data => {
-  data = JSON.parse(data);
-  for (const asset of data.assets) {
-    if (asset.name == FBI) {
-      return new Promise((resolve, reject) => {
-        request(asset.browser_download_url)
-          .on('error', reject)
-          .on('end', resolve)
-          .pipe(fs.createWriteStream(FBI));
-      });
+function update() {
+  rp({
+    url: FBI_LATEST,
+    headers: {
+      'User-Agent': 'ericchu94/hsapp',
+      'Accept': 'application/vnd.github.v3+json',
+    },
+  }).then(data => {
+    data = JSON.parse(data);
+    app.context.info.fbi = data.name;
+    for (const asset of data.assets) {
+      if (asset.name == FBI) {
+        return new Promise((resolve, reject) => {
+          request(asset.browser_download_url)
+            .on('error', reject)
+            .on('end', resolve)
+            .pipe(fs.createWriteStream(`${FBI}_tmp`));
+        }).then(() => {
+          return fs.moveAsync(`${FBI}_tmp`, FBI, {
+            clobber: true,
+          });
+        }).then(() => {
+          console.log(`${FBI} updated`);
+        });
+      }
     }
-  }
-});
+  });
+}
 
 Git.Clone(UNIVERSAL_INJECT_GENERATOR_GIT, UNIVERSAL_INJECT_GENERATOR).then(repo => {
   return repo.checkoutRef(UNIVERSAL_INJECT_GENERATOR_STABLE);
 });
+
+update();
+setInterval(update, 10 * 60 * 1000);
 
 app.listen(process.env.PORT || 3000);
