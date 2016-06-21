@@ -75,4 +75,4 @@ Git.Clone(UNIVERSAL_INJECT_GENERATOR_GIT, UNIVERSAL_INJECT_GENERATOR).then(repo 
   return repo.checkoutRef(UNIVERSAL_INJECT_GENERATOR_STABLE);
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
