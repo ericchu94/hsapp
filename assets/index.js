@@ -21,7 +21,8 @@ $(function () {
     }).then(function (ret) {
       saveAs(new File([ret], 'FBI_inject_with_banner.app'));
     }, function (err) {
-      alert(err);
+      console.log(err);
+      alert('Sorry, an error has occurred.');
     });
   });
   $('#caption').on('dragenter', function (event) {
