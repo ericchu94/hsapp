@@ -9,11 +9,12 @@ html, body {
     right: 10px;
 }
 #caption {
+    cursor: pointer;
+    outline: none;
     height: 100%;
     width: 100%;
     border: 3px solid grey;
     border-radius: 20px;
-    background: #ffff55;
 }
 #caption.highlight {
     background: #0DFF97;

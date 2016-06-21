@@ -3,6 +3,7 @@ $(function () {
     $('input[name="hsapp"]').click();
   });
   $('input[name="hsapp"]').on('change', function () {
+    $('input[name="hsapp"]').addClass('highlight');
     $('form').submit();
   });
   $('#caption').on('drop', function (event) {
