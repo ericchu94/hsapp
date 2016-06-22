@@ -24,8 +24,10 @@ const upload = multer({
   dest: os.tmpdir(),
 });
 
+// Additional data
 app.context.info = {};
 
+// General purpose logging
 app.use((ctx, next) => {
   const start = new Date();
   return next().then(() => {
@@ -33,29 +35,36 @@ app.use((ctx, next) => {
     console.log(`${ctx.method} ${ctx.url} - ${end - start} ms`);
   });
 });
+
 app.use(route.get('/', serve('assets')));
 app.use(route.get('/assets/*', serve('.')));
+
 app.use(route.post('/inject', upload.single('hsapp')));
 app.use(route.post('/inject', (ctx) => {
   const hsapp = ctx.req.file.path;
   const size = ctx.req.file.size;
   console.log(`Size: ${size / 1000} kB`);
   const wd = `${hsapp}_hsapp`
+  // Setup working directory
   return fs.copyAsync(UNIVERSAL_INJECT_GENERATOR, wd).then(() => {
+    // Setup input files
     return Promise.all([
       fs.moveAsync(hsapp, `${wd}/input/hs.app`),
       fs.copyAsync(FBI, `${wd}/input/${FBI}`),
     ]);
   }).then(() => {
+    // Exec Universal Inject Generator
     return execFile(`${wd}/go.sh`, {
       cwd: wd,
     });
   }).then(() => {
+    // Send file
     ctx.set('Content-Disposition', `attachment; filename="${FBI_INJECT}"`);
     return send(ctx, `${wd}/${FBI_INJECT}`, {
       root: '/',
     });
   }).then(() => {
+    // Delete working directory
     return fs.removeAsync(wd);
   }).then(() => {
     console.log('hs.app successfully injected');
@@ -65,6 +74,7 @@ app.use(route.get('/info', ctx => {
   ctx.body = app.context.info;
 }));
 
+// Update FBI to latest version
 function update() {
   rp({
     url: FBI_LATEST,
@@ -94,11 +104,14 @@ function update() {
   });
 }
 
+// Clone Universal Inject Geneartor
 Git.Clone(UNIVERSAL_INJECT_GENERATOR_GIT, UNIVERSAL_INJECT_GENERATOR).then(repo => {
   return repo.checkoutRef(UNIVERSAL_INJECT_GENERATOR_STABLE);
 });
 
 update();
+
+// Every 10 minutes yo
 setInterval(update, 10 * 60 * 1000);
 
 app.listen(process.env.PORT || 3000);
