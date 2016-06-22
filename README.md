@@ -5,9 +5,10 @@ Inject FBI into health & safety
 Accepts `hs.app` via file upload, injects the latest version of FBI, and returns `FBI_inject_with_banner.app`.
 
 ## Usage
-`npm install`
-
-`node .`
+```
+$ npm install
+$ node .
+```
 
 ## Notes
 * Uses [Universal Inject Generator] (https://github.com/d0k3/Universal-Inject-Generator)
